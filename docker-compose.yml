@@ -1,0 +1,27 @@
+version: '3'
+services:
+  brewdb:
+    image: brewdb
+    ports:
+      - "5432:5432"
+  brew_pipe:
+    image: brew_pipe
+    ports:
+      - "8888:8888"
+    volumes:
+      - /Users/subhuti/virtualbrew/brew_pipe:/brew_pipe
+      - /Users/subhuti/gdrive/virtualbrew/brew_data:/brew_data
+      - /Users/subhuti/virtualbrew/brewdb:/brewdb
+    tty: true
+    environment:
+      BREWDB_HOST: localhost
+    depends_on:
+      - db
+  brew-web-ui:
+    image: brew-web-ui
+    command: node /node_app/dist/index.js
+    links:
+      - db
+    volumes:
+      - /Users/subhuti/virtualbrew/brew-web-ui:/brew-web-ui
+      - /brew-web-ui/node_modules
